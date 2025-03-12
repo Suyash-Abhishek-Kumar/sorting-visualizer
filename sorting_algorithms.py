@@ -1,7 +1,6 @@
 class sorter:
     def __init__(self, nums):
         self.nums = nums
-        self.n = len(self.nums)
     
     def swap(self, i, j):
         temp = self.nums[i]
@@ -9,8 +8,8 @@ class sorter:
         self.nums[j] = temp
 
     def bubble_sort(self, i):
-        for j in range(self.n):
-            if self.nums[i] > self.nums[j]:
+        for j in range(len(self.nums)):
+            if self.nums[i] < self.nums[j]:
                 self.swap(i, j)
         return self.nums
 
