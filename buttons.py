@@ -2,13 +2,14 @@ import pygame # type: ignore
 import colors
 
 class Button:
-    def __init__(self, screen, loc, width, name, func):
+    def __init__(self, screen, loc, width, name, color, func):
         self.screen = screen
         self.location = loc
         self.width = width
         self.bold_width = self.width + 3
         self.width_copy = width
         self.name = name
+        self.color = color
         self.name_rect = self.name.get_rect()
         self.box_rect = self.name.get_rect()
         self.name_size = self.name_rect.size
@@ -19,7 +20,7 @@ class Button:
 
     def run(self):
         self.collision_check()
-        pygame.draw.rect(self.screen, colors.WHITE, self.box_rect, self.width)
+        pygame.draw.rect(self.screen, self.color, self.box_rect, self.width)
         self.screen.blit(self.name, self.name_rect)
 
     def collision_check(self):
