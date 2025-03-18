@@ -14,7 +14,8 @@ class Sort_Visualizer:
         self.clock = pygame.time.Clock()
         self.nums = self.scale_nums(nums)
         self.regular_font = pygame.font.Font(".\\basic_types\\Roboto-Medium.ttf", 24)
-        self.buttons = [Button(self.screen, (100, 600), 3, self.regular_font.render("Sort", False, colors.BLACK), colors.BLACK, self.start)]
+        self.img = pygame.image.load('.\\graphics\\button_2.png').convert_alpha()
+        self.buttons = [Button(self.screen, (100, 600), 3, self.regular_font.render("Sort", False, colors.BLACK), colors.BLACK, self.start, self.img)]
         self.algo = sorter(self.nums)
         self.height_multiplier = 380 / max(self.nums)
         self.width = 345 / len(self.nums)
