@@ -10,9 +10,13 @@ class sorter:
         self.return_idxs = []
         self.left_part = []
         self.right_part = []
+        self.min_idx = 0
 
     def swap(self, i, j):
-        self.nums[i], self.nums[j] = self.nums[j], self.nums[i]
+        try:
+            self.nums[i], self.nums[j] = self.nums[j], self.nums[i]
+        except IndexError:
+            print(len(self.nums)-1, i, j)
 
     def bubble_sort(self):
         if self.i < len(self.nums) - 1:
@@ -20,10 +24,10 @@ class sorter:
                 if self.nums[self.j] > self.nums[self.j + 1]:
                     self.swap(self.j, self.j + 1)
                     self.return_idxs = [self.j, self.j+1]
-                self.j += 1  # Move to next comparison
+                self.j += 1
             else:
-                self.j = 0  # Reset comparison index
-                self.i += 1  # Move to next pass
+                self.j = 0
+                self.i += 1
         self.return_idxs.append("B")
         return self.nums, self.return_idxs
 
@@ -39,45 +43,22 @@ class sorter:
         self.i += 1
         return self.nums, self.return_idxs
 
-    def merge_sort(self):
-        # Step 1: Divide the array into subarrays
-        if not self.merge_steps and self.stack:
-            left, right = self.stack.pop()
-            if left < right:
-                mid = (left + right) // 2
-                self.stack.append((left, mid))
-                self.stack.append((mid + 1, right))
-                self.merge_steps.append((left, mid, right))  # Store merge step
-                return self.nums, []  # Return early to prevent instant merging
+    def selection_sort(self):
+        n = len(self.nums)
+        if self.min_idx < n - 1:
+            if self.j < n:
+                if self.nums[self.j] < self.nums[self.min_idx]:
+                    self.min_idx = self.j
+                
+                self.return_idxs = [self.j, self.min_idx, "S"]
+                self.j += 1
 
-        # Step 2: Merge progressively
-        if self.merge_steps:
-            if not self.current_merge:  # Start new merge
-                left, mid, right = self.merge_steps.pop(0)
-                self.current_merge = {
-                    "left_idx": 0,
-                    "right_idx": 0,
-                    "left": self.nums[left:mid + 1],
-                    "right": self.nums[mid + 1:right + 1],
-                    "merge_idx": left,
-                    "end": right
-                }
-
-            merge = self.current_merge
-            if merge["left_idx"] < len(merge["left"]) and (merge["right_idx"] >= len(merge["right"]) or merge["left"][merge["left_idx"]] <= merge["right"][merge["right_idx"]]):
-                self.nums[merge["merge_idx"]] = merge["left"][merge["left_idx"]]
-                merge["left_idx"] += 1
-            elif merge["right_idx"] < len(merge["right"]):
-                self.nums[merge["merge_idx"]] = merge["right"][merge["right_idx"]]
-                merge["right_idx"] += 1
-
-            # Highlight merging index
-            self.return_idxs = [merge["merge_idx"]]
-            merge["merge_idx"] += 1
-
-            # Finish merge when all elements are merged
-            if merge["merge_idx"] > merge["end"]:
-                self.current_merge = None  # Reset for next merge
+            if self.j == n:
+                self.swap(self.min_idx, self.i)
+                self.i += 1
+                self.j = self.i
+                self.min_idx = self.i
+                self.return_idxs = [self.min_idx, self.i-1, "S"]
 
         return self.nums, self.return_idxs
 

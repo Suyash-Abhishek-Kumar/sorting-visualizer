@@ -38,11 +38,11 @@ class Sort_Visualizer:
                             if j.collision_check():
                                 j.function()
                                 continue
-            self.screen.fill(colors.WHITE)
+            self.screen.fill(colors.update_brightness(colors.BLACK, 100))
             self.graph()
             if self.begin:
                 if self.nums != sorted(self.nums):
-                    self.nums, self.idxs = self.algo.quick_sort()
+                    self.nums, self.idxs = self.algo.selection_sort()
                     if type(self.idxs[-1]) == str:
                         self.algo_used = self.idxs.pop()
                     if self.algo_used == "Q":
@@ -54,7 +54,6 @@ class Sort_Visualizer:
                     self.idxs = [0]
                 else:
                     if len(self.idxs) < len(self.nums):
-                        print(self.idxs)
                         self.idxs.append(self.idxs[-1] + 1)
             for i in self.buttons:
                 i.run()
@@ -62,6 +61,7 @@ class Sort_Visualizer:
             self.clock.tick(10)
     
     def graph(self):
+        pygame.draw.rect(self.screen, colors.WHITE, [200, 100, 400, 300], 0)
         pygame.draw.rect(self.screen, colors.BLACK, [200, 100, 400, 300], 5)
         for i in range(len(self.nums)):
             if i not in self.idxs:
@@ -69,19 +69,25 @@ class Sort_Visualizer:
             elif not self.done and self.algo_used == "Q" and i == self.idxs[-1]:
                 pygame.draw.rect(self.screen, colors.PURPLE, [210 + self.width * i * 1.1, 395 - self.nums[i], self.width, self.nums[i]], 0)
                 self.idxs.pop(self.idxs.index(i))
+            elif not self.done and self.algo_used == "S" and i == self.idxs[-1]:
+                pygame.draw.rect(self.screen, colors.update_brightness(colors.ORANGE, -100), [210 + self.width * i * 1.1, 395 - self.nums[i], self.width, self.nums[i]], 0)
             elif not self.done:
                 pygame.draw.rect(self.screen, colors.ORANGE, [210 + self.width * i * 1.1, 395 - self.nums[i], self.width, self.nums[i]], 0)
             else:
-                pygame.draw.rect(self.screen, colors.GREEN, [210 + self.width * i * 1.1, 395 - self.nums[i], self.width, self.nums[i]], 0)
+                pygame.draw.rect(self.screen, colors.update_brightness(colors.GREEN, 100), [210 + self.width * i * 1.1, 395 - self.nums[i], self.width, self.nums[i]], 0)
 
     def scale_nums(self, nums):
         max_num = max(nums)
         scale_factor = 270 / max_num
         return [num * scale_factor for num in nums]
     
-    def input(self):
-        #define input of nums and set width of each bar accordingly in the bar graph
-        pass
+    def reset(self):
+        self.nums = [randint(5, 105) for _ in range(25)]
+        self.idxs = []
+        self.sorted = 0
+        self.done = False
+        self.algo_used = None
+        self.begin = False
         
 
 nums = [randint(5, 105) for _ in range(25)]
