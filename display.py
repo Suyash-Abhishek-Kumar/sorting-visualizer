@@ -17,17 +17,19 @@ class Sort_Visualizer:
         self.regular_font = pygame.font.Font(".\\basic_types\\Roboto-Medium.ttf", 24)
         self.img = pygame.image.load('.\\graphics\\button_2.png').convert_alpha()
         self.buttons = [
-            Button(self.screen, (100, 600), 3, self.regular_font.render("Sort", False, colors.BLACK), colors.BLACK, self.start, self.img),
-            Button(self.screen, (700, 600), 3, self.regular_font.render("Shuffle", False, colors.BLACK), colors.BLACK, self.reset, self.img),
-            Button(self.screen, (400, 500), 3, self.regular_font.render("Bubble Sort", False, colors.BLACK), colors.BLACK, self.B, self.img),
-            Button(self.screen, (400, 550), 3, self.regular_font.render("Insertion Sort", False, colors.BLACK), colors.BLACK, self.I, self.img),
-            Button(self.screen, (400, 600), 3, self.regular_font.render("Selection Sort", False, colors.BLACK), colors.BLACK, self.S, self.img),
-            Button(self.screen, (400, 650), 3, self.regular_font.render("Quick Sort", False, colors.BLACK), colors.BLACK, self.Q, self.img)
+            Button(self.screen, (550, 525), 3, self.regular_font.render("Sort", False, colors.BLACK), colors.BLACK, self.start, self.img),
+            Button(self.screen, (550, 575), 3, self.regular_font.render("Shuffle", False, colors.BLACK), colors.BLACK, self.reset, self.img),
+            Button(self.screen, (550, 625), 3, self.regular_font.render("New Array", False, colors.BLACK), colors.BLACK, self.reset_full, self.img),
+            Button(self.screen, (250, 500), 3, self.regular_font.render("Bubble Sort", False, colors.BLACK), colors.BLACK, self.B, self.img),
+            Button(self.screen, (250, 550), 3, self.regular_font.render("Insertion Sort", False, colors.BLACK), colors.BLACK, self.I, self.img),
+            Button(self.screen, (250, 600), 3, self.regular_font.render("Selection Sort", False, colors.BLACK), colors.BLACK, self.S, self.img),
+            Button(self.screen, (250, 650), 3, self.regular_font.render("Quick Sort", False, colors.BLACK), colors.BLACK, self.Q, self.img)
         ]
         self.algo = sorter(self.nums)
         self.height_multiplier = 380 / max(self.nums)
         self.width = 345 / len(self.nums)
         self.idxs = []
+        self.sorteds = []
         self.sorted = 0
         self.done = False
         self.algo_used = None
@@ -60,6 +62,7 @@ class Sort_Visualizer:
                     if type(self.idxs[-1]) == str:
                         self.algo_used = self.idxs.pop()
                     if self.algo_used == "Q":
+                        self.sorteds = self.idxs.pop()
                         pivot = self.idxs.pop()
                         self.idxs = list(set(self.idxs))
                         self.idxs.append(pivot)
@@ -89,6 +92,8 @@ class Sort_Visualizer:
                 pygame.draw.rect(self.screen, colors.ORANGE, [210 + self.width * i * 1.1, 395 - self.nums[i], self.width, self.nums[i]], 0)
             else:
                 pygame.draw.rect(self.screen, colors.update_brightness(colors.GREEN, 100), [210 + self.width * i * 1.1, 395 - self.nums[i], self.width, self.nums[i]], 0)
+            if not self.done and self.algo_used == "Q" and i in self.sorteds:
+                pygame.draw.rect(self.screen, colors.PURPLE, [210 + self.width * i * 1.1, 395 - self.nums[i], self.width, self.nums[i]], 0)
 
     def scale_nums(self, nums):
         max_num = max(nums)
@@ -103,9 +108,17 @@ class Sort_Visualizer:
         self.algo_used = None
         self.begin = False
         self.algo = sorter(self.nums)
-        
+    
+    def reset_full(self):
+        nums = [randint(5, 105) for _ in range(25)]
+        self.nums = self.scale_nums(nums)
+        self.idxs = []
+        self.sorted = 0
+        self.done = False
+        self.algo_used = None
+        self.begin = False
+        self.algo = sorter(self.nums)
 
 nums = [randint(5, 105) for _ in range(25)]
-print(nums)
 x = Sort_Visualizer(nums)
 x.display()
