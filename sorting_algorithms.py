@@ -17,6 +17,13 @@ class sorter:
             self.nums[i], self.nums[j] = self.nums[j], self.nums[i]
         except IndexError:
             print(len(self.nums)-1, i, j)
+    
+    def sort_type(self, type):
+        match type:
+            case "B": return self.bubble_sort()
+            case "I": return self.insertion_sort()
+            case "S": return self.selection_sort()
+            case "Q": return self.quick_sort()
 
     def bubble_sort(self):
         if self.i < len(self.nums) - 1:

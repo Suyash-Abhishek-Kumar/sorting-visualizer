@@ -1,5 +1,6 @@
 import pygame # type: ignore
 import colors
+from random import shuffle
 from buttons import Button
 from random import randint
 from sorting_algorithms import sorter
@@ -15,7 +16,14 @@ class Sort_Visualizer:
         self.nums = self.scale_nums(nums)
         self.regular_font = pygame.font.Font(".\\basic_types\\Roboto-Medium.ttf", 24)
         self.img = pygame.image.load('.\\graphics\\button_2.png').convert_alpha()
-        self.buttons = [Button(self.screen, (100, 600), 3, self.regular_font.render("Sort", False, colors.BLACK), colors.BLACK, self.start, self.img)]
+        self.buttons = [
+            Button(self.screen, (100, 600), 3, self.regular_font.render("Sort", False, colors.BLACK), colors.BLACK, self.start, self.img),
+            Button(self.screen, (700, 600), 3, self.regular_font.render("Shuffle", False, colors.BLACK), colors.BLACK, self.reset, self.img),
+            Button(self.screen, (400, 500), 3, self.regular_font.render("Bubble Sort", False, colors.BLACK), colors.BLACK, self.B, self.img),
+            Button(self.screen, (400, 550), 3, self.regular_font.render("Insertion Sort", False, colors.BLACK), colors.BLACK, self.I, self.img),
+            Button(self.screen, (400, 600), 3, self.regular_font.render("Selection Sort", False, colors.BLACK), colors.BLACK, self.S, self.img),
+            Button(self.screen, (400, 650), 3, self.regular_font.render("Quick Sort", False, colors.BLACK), colors.BLACK, self.Q, self.img)
+        ]
         self.algo = sorter(self.nums)
         self.height_multiplier = 380 / max(self.nums)
         self.width = 345 / len(self.nums)
@@ -24,8 +32,13 @@ class Sort_Visualizer:
         self.done = False
         self.algo_used = None
         self.begin = False
+        self.selected_func = "B"
     
     def start(self): self.begin = True
+    def B(self): self.selected_func = "B"
+    def I(self): self.selected_func = "I"
+    def S(self): self.selected_func = "S"
+    def Q(self): self.selected_func = "Q"
 
     def display(self):
         running = True
@@ -43,14 +56,14 @@ class Sort_Visualizer:
             self.graph()
             if self.begin:
                 if self.nums != sorted(self.nums):
-                    self.nums, self.idxs = self.algo.selection_sort()
+                    self.nums, self.idxs = self.algo.sort_type(self.selected_func)
                     if type(self.idxs[-1]) == str:
                         self.algo_used = self.idxs.pop()
                     if self.algo_used == "Q":
                         pivot = self.idxs.pop()
                         self.idxs = list(set(self.idxs))
                         self.idxs.append(pivot)
-                elif self.idxs[0]!=0:
+                elif not self.idxs or self.idxs[0]!=0:
                     self.done = True
                     self.idxs = [0]
                 else:
@@ -83,12 +96,13 @@ class Sort_Visualizer:
         return [num * scale_factor for num in nums]
     
     def reset(self):
-        self.nums = [randint(5, 105) for _ in range(25)]
+        shuffle(self.nums)
         self.idxs = []
         self.sorted = 0
         self.done = False
         self.algo_used = None
         self.begin = False
+        self.algo = sorter(self.nums)
         
 
 nums = [randint(5, 105) for _ in range(25)]

@@ -17,6 +17,7 @@ class Button:
         self.name_rect.center = self.location
         self.box_rect.center = self.name_rect.center
         self.function = func
+        self.img = None
         if button_img:
             self.img = button_img
             self.box_rect.size = (self.box_rect.size[0] + 17, self.box_rect.size[1] + 2)
