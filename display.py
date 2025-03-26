@@ -8,7 +8,7 @@ from sorting_algorithms import sorter
 pygame.init()
 
 class Sort_Visualizer:
-    def __init__(self, nums):
+    def __init__(self, nums, length):
         self.w, self.h = 800, 800
         self.screen = pygame.display.set_mode((self.w, self.h))
         pygame.display.set_caption("Sort Visualizer")
@@ -17,13 +17,14 @@ class Sort_Visualizer:
         self.regular_font = pygame.font.Font(".\\basic_types\\Roboto-Medium.ttf", 24)
         self.img = pygame.image.load('.\\graphics\\button_2.png').convert_alpha()
         self.buttons = [
-            Button(self.screen, (550, 525), 3, self.regular_font.render("Sort", False, colors.BLACK), colors.BLACK, self.start, self.img),
-            Button(self.screen, (550, 575), 3, self.regular_font.render("Shuffle", False, colors.BLACK), colors.BLACK, self.reset, self.img),
-            Button(self.screen, (550, 625), 3, self.regular_font.render("New Array", False, colors.BLACK), colors.BLACK, self.reset_full, self.img),
-            Button(self.screen, (250, 500), 3, self.regular_font.render("Bubble Sort", False, colors.BLACK), colors.BLACK, self.B, self.img),
-            Button(self.screen, (250, 550), 3, self.regular_font.render("Insertion Sort", False, colors.BLACK), colors.BLACK, self.I, self.img),
-            Button(self.screen, (250, 600), 3, self.regular_font.render("Selection Sort", False, colors.BLACK), colors.BLACK, self.S, self.img),
-            Button(self.screen, (250, 650), 3, self.regular_font.render("Quick Sort", False, colors.BLACK), colors.BLACK, self.Q, self.img)
+            Button(self.screen, (550, 525), 3, "Sort", colors.BLACK, self.start, self.img),
+            Button(self.screen, (550, 575), 3, "Shuffle", colors.BLACK, self.reset, self.img),
+            Button(self.screen, (550, 625), 3, "New Array", colors.BLACK, self.reset_full, self.img),
+            Button(self.screen, (250, 500), 3, "Bubble Sort", colors.BLACK, self.B, self.img),
+            Button(self.screen, (250, 550), 3, "Insertion Sort", colors.BLACK, self.I, self.img),
+            Button(self.screen, (250, 600), 3, "Selection Sort", colors.BLACK, self.S, self.img),
+            Button(self.screen, (250, 650), 3, "Quick Sort", colors.BLACK, self.Q, self.img),
+            Button(self.screen, (250, 700), 3, "Merge Sort", colors.BLACK, self.M, self.img)
         ]
         self.algo = sorter(self.nums)
         self.height_multiplier = 380 / max(self.nums)
@@ -35,15 +36,19 @@ class Sort_Visualizer:
         self.algo_used = None
         self.begin = False
         self.selected_func = "B"
+        self.length = length
+        self.final_green = self.final_green_speed()
     
     def start(self): self.begin = True
     def B(self): self.selected_func = "B"
     def I(self): self.selected_func = "I"
     def S(self): self.selected_func = "S"
     def Q(self): self.selected_func = "Q"
+    def M(self): self.selected_func = "M"
 
     def display(self):
         running = True
+        reset_yet = False
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -66,12 +71,17 @@ class Sort_Visualizer:
                         pivot = self.idxs.pop()
                         self.idxs = list(set(self.idxs))
                         self.idxs.append(pivot)
+                elif self.algo_used == "M" and self.idxs[-1] == self.length - 1 and not reset_yet:
+                    self.done = True
+                    reset_yet = True
+                    self.idxs = [0]
                 elif not self.idxs or self.idxs[0]!=0:
                     self.done = True
                     self.idxs = [0]
                 else:
                     if len(self.idxs) < len(self.nums):
-                        self.idxs.append(self.idxs[-1] + 1)
+                        for i in range(self.final_green):
+                            self.idxs.append(self.idxs[-1] + 1)
             for i in self.buttons:
                 i.run()
             pygame.display.update()
@@ -99,6 +109,11 @@ class Sort_Visualizer:
         max_num = max(nums)
         scale_factor = 270 / max_num
         return [num * scale_factor for num in nums]
+
+    def final_green_speed(self):
+        final_green = self.length // 50
+        if final_green == 0: self.final_green = 1
+        return final_green
     
     def reset(self):
         shuffle(self.nums)
@@ -110,7 +125,7 @@ class Sort_Visualizer:
         self.algo = sorter(self.nums)
     
     def reset_full(self):
-        nums = [randint(5, 105) for _ in range(25)]
+        nums = [randint(5, 105) for _ in range(self.length)]
         self.nums = self.scale_nums(nums)
         self.idxs = []
         self.sorted = 0
@@ -119,6 +134,6 @@ class Sort_Visualizer:
         self.begin = False
         self.algo = sorter(self.nums)
 
-nums = [randint(5, 105) for _ in range(25)]
-x = Sort_Visualizer(nums)
+nums = [randint(5, 105) for _ in range(100)]
+x = Sort_Visualizer(nums, 100)
 x.display()
