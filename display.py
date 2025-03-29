@@ -56,7 +56,7 @@ class Sort_Visualizer:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-            self.screen.fill(colors.scrolling(10))
+            self.screen.fill(colors.scrolling(25))
             pygame.display.update()
             self.clock.tick(10)
 
@@ -174,8 +174,7 @@ class Sort_Visualizer:
         self.algo = sorter(self.nums)
 
 if __name__ == "__main__":
-    nums = [randint(5, 105) for _ in range(100)]
-    x = Sort_Visualizer(nums)
+    x = Sort_Visualizer([1])
     x.dont()
 else:
     nums = [randint(5, 105) for _ in range(100)]
