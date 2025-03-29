@@ -23,13 +23,21 @@ class sorter:
         except IndexError:
             print(len(self.nums)-1, i, j)
     
-    def sort_type(self, type):
-        match type:
-            case "B": return self.bubble_sort()
-            case "I": return self.insertion_sort()
-            case "S": return self.selection_sort()
-            case "Q": return self.quick_sort()
-            case "M": return self.old_merge_sort()
+    def sort_type(self, type, fast):
+        if fast:
+            match type:
+                case "B": return self.fast_bubble_sort()
+                case "I": return self.fast_insertion_sort()
+                case "S": return self.fast_selection_sort()
+                case "Q": return self.quick_sort()
+                case "M": return self.fast_merge_sort()
+        else:
+            match type:
+                case "B": return self.bubble_sort()
+                case "I": return self.insertion_sort()
+                case "S": return self.selection_sort()
+                case "Q": return self.quick_sort()
+                case "M": return self.fast_merge_sort()
 
     def bubble_sort(self):
         if self.i < len(self.nums) - 1:
@@ -42,6 +50,18 @@ class sorter:
                 self.j = 0
                 self.i += 1
         self.return_idxs.append("B")
+        return self.nums, self.return_idxs
+
+    def fast_bubble_sort(self):
+        swap_1 = -1
+        self.i += 1
+        for i in range(len(self.nums) - 1):
+            if self.nums[i] > self.nums[i+1]:
+                if swap_1 == -1: swap_1 = i
+                temp = self.nums[i]
+                self.nums[i] = self.nums[i+1]
+                self.nums[i+1] = temp
+        self.return_idxs = [swap_1, len(self.nums) - self.i, 'B']
         return self.nums, self.return_idxs
 
     def insertion_sort(self):
@@ -59,6 +79,19 @@ class sorter:
             self.i += 1
             self.j = self.i
 
+        return self.nums, self.return_idxs
+    
+    def fast_insertion_sort(self):
+        self.i += 1
+        key = self.nums[self.i]
+        j = self.i - 1
+        start = -1
+        while j >= 0 and self.nums[j] > key:
+            if start == -1: start = j
+            self.nums[j+1] = self.nums[j]
+            j-=1
+        self.nums[j+1] = key
+        self.return_idxs = [j + 1, start+1, "I"]
         return self.nums, self.return_idxs
 
     def m_insertion_sort(self, low):
@@ -95,6 +128,18 @@ class sorter:
                 self.min_idx = self.i
                 self.return_idxs = [self.min_idx, self.i-1, "S"]
 
+        return self.nums, self.return_idxs
+
+    def fast_selection_sort(self):
+        minn = 999999
+        idx = -1
+        for i in range(self.i, len(self.nums)):
+            if minn != min(minn, self.nums[i]):
+                idx = i
+                minn = self.nums[i]
+        self.swap(idx, self.i)
+        self.i += 1
+        self.return_idxs = [self.i, idx, "S"]
         return self.nums, self.return_idxs
 
     def quick_sort(self):
@@ -141,7 +186,7 @@ class sorter:
 
         return self.nums, self.return_idxs
 
-    def old_merge_sort(self):
+    def fast_merge_sort(self):
         length = len(self.nums)
 
         if self.step < length:  # Check if sorting is still in progress

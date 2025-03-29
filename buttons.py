@@ -3,7 +3,7 @@ import colors
 
 class Button:
     def __init__(self, screen, loc, width, name, color, func, button_img = None):
-        self.regular_font = pygame.font.Font(".\\basic_types\\Roboto-Medium.ttf", 24)
+        self.regular_font = pygame.font.Font(".\\basic_types\\Roboto-Medium.ttf", 16)
         self.screen = screen
         self.location = loc
         self.width = width
