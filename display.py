@@ -50,6 +50,16 @@ class Sort_Visualizer:
     def Q(self): self.selected_func = "Q"
     def M(self): self.selected_func = "M"
 
+    def dont(self):
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+            self.screen.fill(colors.scrolling(10))
+            pygame.display.update()
+            self.clock.tick(10)
+
     def display(self):
         running = True
         reset_yet = False
@@ -163,6 +173,11 @@ class Sort_Visualizer:
         self.begin = False
         self.algo = sorter(self.nums)
 
-nums = [randint(5, 105) for _ in range(100)]
-x = Sort_Visualizer(nums)
-x.display()
+if __name__ == "__main__":
+    nums = [randint(5, 105) for _ in range(100)]
+    x = Sort_Visualizer(nums)
+    x.dont()
+else:
+    nums = [randint(5, 105) for _ in range(100)]
+    x = Sort_Visualizer(nums)
+    x.display()
