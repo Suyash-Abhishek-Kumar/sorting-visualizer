@@ -10,7 +10,7 @@ pygame.init()
 
 class Sort_Visualizer:
     def __init__(self, nums):
-        self.w, self.h = 800, 800
+        self.w, self.h = 800, 550
         self.screen = pygame.display.set_mode((self.w, self.h))
         pygame.display.set_caption("Sort Visualizer")
         self.clock = pygame.time.Clock()
@@ -105,6 +105,16 @@ class Sort_Visualizer:
             current_speed = self.speed_slider.get_value()
             pygame.display.update()
             self.clock.tick(60)
+
+    def display_new(self):
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+            self.screen.fill(colors.WHITE)
+            pygame.display.update()
+            self.clock.tick(60)
     
     def graph(self):
         pygame.draw.rect(self.screen, colors.WHITE, [200, 100, 400, 300], 0)
@@ -170,7 +180,7 @@ class Sort_Visualizer:
 
 if __name__ == "__main__":
     x = Sort_Visualizer([1])
-    x.dont()
+    x.display_new()
 else:
     nums = [randint(5, 105) for _ in range(100)]
     x = Sort_Visualizer(nums)
