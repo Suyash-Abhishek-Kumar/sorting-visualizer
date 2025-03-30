@@ -28,18 +28,7 @@ class Sort_Visualizer:
             Button(self.screen, (250, 650), 3, "Quick Sort", colors.BLACK, self.Q, self.img),
             Button(self.screen, (250, 700), 3, "Merge Sort", colors.BLACK, self.M, self.img)
         ]
-        self.speed_slider = Slider(
-            screen=self.screen,
-            loc=(550, 550),  # Center position
-            width=200,       # Width of the track
-            height=10,       # Height of the track
-            min_val=1,       # Minimum value
-            max_val=100,     # Maximum value
-            init_val=50,     # Initial value
-            color=colors.GRAY,
-            handle_color=colors.BLUE,
-            label="Speed"
-        )
+        self.speed_slider = Slider(self.screen, (550, 550), 200, 10, 1, 100, 50, colors.GRAY, colors.BLUE, "Speed")
         self.width = 0
         self.nums = self.scale_nums(nums)
         self.length = len(self.nums)
