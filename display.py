@@ -1,5 +1,6 @@
 import pygame # type: ignore
 import colors
+from slider import Slider
 from random import shuffle
 from buttons import Button
 from random import randint
@@ -27,6 +28,18 @@ class Sort_Visualizer:
             Button(self.screen, (250, 650), 3, "Quick Sort", colors.BLACK, self.Q, self.img),
             Button(self.screen, (250, 700), 3, "Merge Sort", colors.BLACK, self.M, self.img)
         ]
+        self.speed_slider = Slider(
+            screen=self.screen,
+            loc=(550, 550),  # Center position
+            width=200,       # Width of the track
+            height=10,       # Height of the track
+            min_val=1,       # Minimum value
+            max_val=100,     # Maximum value
+            init_val=50,     # Initial value
+            color=colors.GRAY,
+            handle_color=colors.BLUE,
+            label="Speed"
+        )
         self.width = 0
         self.nums = self.scale_nums(nums)
         self.length = len(self.nums)
@@ -73,6 +86,7 @@ class Sort_Visualizer:
                             if j.collision_check():
                                 j.function()
                                 continue
+                self.speed_slider.handle_event(event)
             self.screen.fill(colors.update_brightness(colors.BLACK, 100))
             self.graph()
             if self.begin:
@@ -96,10 +110,12 @@ class Sort_Visualizer:
                     if len(self.idxs) < len(self.nums):
                         for i in range(self.final_green):
                             self.idxs.append(self.idxs[-1] + 1)
+            self.speed_slider.run()
             for i in self.buttons:
                 i.run()
+            current_speed = self.speed_slider.get_value()
             pygame.display.update()
-            self.clock.tick(10)
+            self.clock.tick(60)
     
     def graph(self):
         pygame.draw.rect(self.screen, colors.WHITE, [200, 100, 400, 300], 0)
@@ -132,16 +148,6 @@ class Sort_Visualizer:
     
     def reset(self):
         shuffle(self.nums)
-        self.idxs = []
-        self.sorted = 0
-        self.done = False
-        self.algo_used = None
-        self.begin = False
-        self.algo = sorter(self.nums)
-    
-    def reset_full(self):
-        nums = [randint(5, 105) for _ in range(self.length)]
-        self.nums = self.scale_nums(nums)
         self.idxs = []
         self.sorted = 0
         self.done = False
