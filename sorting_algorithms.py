@@ -139,7 +139,7 @@ class sorter:
                 minn = self.nums[i]
         self.swap(idx, self.i)
         self.i += 1
-        self.return_idxs = [self.i, idx, "S"]
+        self.return_idxs = [self.i-1, idx, "S"]
         return self.nums, self.return_idxs
 
     def quick_sort(self):
