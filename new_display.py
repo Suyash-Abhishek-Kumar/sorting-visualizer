@@ -37,12 +37,14 @@ class Sort_Visualizer:
         self.big_arr, self.small_arr = 128, 25
         self.idxs = []
         self.sorteds = []
+        self.graph_start = 30
         self.sorted = 0
         self.done = False
         self.algo_used = None
         self.begin = False
         self.go_fast = True
         self.selected_func = "B"
+        self.ui_bg_color = colors.update_brightness(colors.DARK_NAVY_BLUE, 20)
         self.final_green = self.final_green_speed()
     
     def start(self): self.begin = True
@@ -52,82 +54,38 @@ class Sort_Visualizer:
     def Q(self): self.selected_func = "Q"
     def M(self): self.selected_func = "M"
 
-    def dont(self):
+    def display_new(self):
         running = True
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-            self.screen.fill(colors.scrolling(25))
-            pygame.display.update()
-            self.clock.tick(10)
-
-    def display(self):
-        running = True
-        reset_yet = False
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        for j in self.buttons:
-                            if j.collision_check():
-                                j.function()
-                                continue
-                self.speed_slider.handle_event(event)
-            self.screen.fill(colors.update_brightness(colors.BLACK, 100))
+            self.screen.fill(colors.DARK_NAVY_BLUE)
             self.graph()
-            if self.begin:
-                if self.nums != sorted(self.nums):
-                    self.nums, self.idxs = self.algo.sort_type(self.selected_func, self.go_fast)
-                    if type(self.idxs[-1]) == str:
-                        self.algo_used = self.idxs.pop()
-                    if self.algo_used == "Q":
-                        self.sorteds = self.idxs.pop()
-                        pivot = self.idxs.pop()
-                        self.idxs = list(set(self.idxs))
-                        self.idxs.append(pivot)
-                elif self.algo_used == "M" and self.idxs[-1] == self.length - 1 and not reset_yet:
-                    self.done = True
-                    reset_yet = True
-                    self.idxs = [0]
-                elif not self.idxs or self.idxs[0]!=0:
-                    self.done = True
-                    self.idxs = [0]
-                else:
-                    if len(self.idxs) < len(self.nums):
-                        for i in range(self.final_green):
-                            self.idxs.append(self.idxs[-1] + 1)
-            self.speed_slider.run()
-            for i in self.buttons:
-                i.run()
-            current_speed = self.speed_slider.get_value()
             pygame.display.update()
             self.clock.tick(60)
     
     def graph(self):
-        pygame.draw.rect(self.screen, colors.WHITE, [200, 100, 400, 300], 0)
-        pygame.draw.rect(self.screen, colors.BLACK, [200, 100, 400, 300], 5)
+        pygame.draw.rect(self.screen, self.ui_bg_color, [20, 100, 760, 250], 0, 6)
         for i in range(len(self.nums)):
             if i not in self.idxs:
-                pygame.draw.rect(self.screen, colors.ROYAL_BLUE, [210 + self.width * i * 1.1, 395 - self.nums[i], self.width, self.nums[i]], 0)
+                pygame.draw.rect(self.screen, colors.ROYAL_BLUE, [self.graph_start + self.width * i * 1.1, 345 - self.nums[i], self.width, self.nums[i]], 0)
             elif not self.done and self.algo_used == "Q" and i == self.idxs[-1]:
-                pygame.draw.rect(self.screen, colors.PURPLE, [210 + self.width * i * 1.1, 395 - self.nums[i], self.width, self.nums[i]], 0)
+                pygame.draw.rect(self.screen, colors.PURPLE, [self.graph_start + self.width * i * 1.1, 345 - self.nums[i], self.width, self.nums[i]], 0)
                 self.idxs.pop(self.idxs.index(i))
             elif not self.done and self.algo_used == "S" and i == self.idxs[-1]:
-                pygame.draw.rect(self.screen, colors.update_brightness(colors.ORANGE, -100), [210 + self.width * i * 1.1, 395 - self.nums[i], self.width, self.nums[i]], 0)
+                pygame.draw.rect(self.screen, colors.update_brightness(colors.ORANGE, -100), [self.graph_start + self.width * i * 1.1, 345 - self.nums[i], self.width, self.nums[i]], 0)
             elif not self.done:
-                pygame.draw.rect(self.screen, colors.ORANGE, [210 + self.width * i * 1.1, 395 - self.nums[i], self.width, self.nums[i]], 0)
+                pygame.draw.rect(self.screen, colors.ORANGE, [self.graph_start + self.width * i * 1.1, 345 - self.nums[i], self.width, self.nums[i]], 0)
             else:
-                pygame.draw.rect(self.screen, colors.update_brightness(colors.GREEN, 100), [210 + self.width * i * 1.1, 395 - self.nums[i], self.width, self.nums[i]], 0)
+                pygame.draw.rect(self.screen, colors.update_brightness(colors.GREEN, 100), [self.graph_start + self.width * i * 1.1, 345 - self.nums[i], self.width, self.nums[i]], 0)
             if not self.done and self.algo_used == "Q" and i in self.sorteds:
-                pygame.draw.rect(self.screen, colors.update_brightness(colors.ORANGE, -100), [210 + self.width * i * 1.1, 395 - self.nums[i], self.width, self.nums[i]], 0)
+                pygame.draw.rect(self.screen, colors.update_brightness(colors.ORANGE, -100), [self.graph_start + self.width * i * 1.1, 345 - self.nums[i], self.width, self.nums[i]], 0)
 
     def scale_nums(self, nums):
         max_num = max(nums)
-        scale_factor = 270 / max_num
-        self.width = 345 / len(nums)
+        scale_factor = 230 / max_num
+        self.width = 675 / len(nums)
         return [num * scale_factor for num in nums]
 
     def final_green_speed(self):
@@ -168,10 +126,6 @@ class Sort_Visualizer:
         self.begin = False
         self.algo = sorter(self.nums)
 
-if __name__ == "__main__":
-    x = Sort_Visualizer([1])
-    x.display_new()
-else:
-    nums = [randint(5, 105) for _ in range(100)]
-    x = Sort_Visualizer(nums)
-    x.display()
+nums = [randint(5, 105) for _ in range(100)]
+x = Sort_Visualizer(nums)
+x.display_new()
