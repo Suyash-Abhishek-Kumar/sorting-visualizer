@@ -85,7 +85,7 @@ class Sort_Visualizer:
             self.graph()
             if self.begin:
                 if self.nums != sorted(self.nums):
-                    self.nums, self.idxs = self.algo.sort_type(self.selected_func, self.go_fast)
+                    self.nums, self.idxs, self.comparisions, self.swaps= self.algo.sort_type(self.selected_func, self.go_fast)
                     if type(self.idxs[-1]) == str:
                         self.algo_used = self.idxs.pop()
                     if self.algo_used == "Q":
@@ -142,9 +142,12 @@ class Sort_Visualizer:
         heading = self.head_font.render("Sorting Visualizer", False, colors.WHITE)
         algo = self.small_font.render("Algorithm: ", False, colors.WHITE)
         stat = self.small_font.render("Statistics: ", False, colors.WHITE)
-        comparison = self.tiny_font.render("Comparisons: " + str(self.comparisions), False, colors.WHITE)
-        swaps = self.tiny_font.render("Swaps: " + str(self.swaps), False, colors.WHITE)
-        time = self.tiny_font.render("Time: " + str(round(self.time/self.current_speed, 2)), False, colors.WHITE)
+        comparison = self.tiny_font.render("Comparisons: ", False, colors.WHITE)
+        swaps = self.tiny_font.render("Swaps: ", False, colors.WHITE)
+        time = self.tiny_font.render("Time: ", False, colors.WHITE)
+        comparison_num = self.tiny_font.render(str(self.comparisions), False, colors.GREEN)
+        swaps_num = self.tiny_font.render(str(self.swaps), False, colors.update_brightness(colors.GREEN, 160))
+        time_num = self.tiny_font.render(str(round(self.time/self.current_speed, 2)), False, colors.GREEN)
 
         headbox = heading.get_rect()
         algobox = algo.get_rect()
@@ -152,6 +155,9 @@ class Sort_Visualizer:
         comparisonbox = comparison.get_rect()
         swapbox = swaps.get_rect()
         timebox = time.get_rect()
+        comparison_num_box = comparison_num.get_rect()
+        swaps_num_box = swaps_num.get_rect()
+        time_num_box = time_num.get_rect()
 
         headbox.midleft = (30, 50)
         algobox.midleft = (420, 390)
@@ -159,6 +165,9 @@ class Sort_Visualizer:
         comparisonbox.midleft = (30, 440)
         swapbox.midleft = (30, 460)
         timebox.midleft = (30, 480)
+        comparison_num_box.midleft = (200, 440)
+        swaps_num_box.midleft = (200, 460)
+        time_num_box.midleft = (200, 480)
 
         self.screen.blit(algo, algobox)
         self.screen.blit(stat, statbox)
@@ -166,6 +175,9 @@ class Sort_Visualizer:
         self.screen.blit(heading, headbox)
         self.screen.blit(swaps, swapbox)
         self.screen.blit(time, timebox)
+        self.screen.blit(comparison_num, comparison_num_box)
+        self.screen.blit(swaps_num, swaps_num_box)
+        self.screen.blit(time_num, time_num_box)
 
         #draw lines
         pygame.draw.line(self.screen, colors.WHITE, (420, 410), (770, 410), 1)

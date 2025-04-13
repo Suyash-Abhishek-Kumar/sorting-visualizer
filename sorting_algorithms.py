@@ -15,11 +15,14 @@ class sorter:
         self.min_idx = 0
         self.pivot_idx = 0
         self.step = 1
+        self.comparisions = 0
+        self.swaps = 0
         self.key = None
 
     def swap(self, i, j):
         try:
             self.nums[i], self.nums[j] = self.nums[j], self.nums[i]
+            self.swaps += 1
         except IndexError:
             print(len(self.nums)-1, i, j)
     
@@ -43,6 +46,7 @@ class sorter:
         if self.i < len(self.nums) - 1:
             if self.j < len(self.nums) - 1 - self.i:
                 if self.nums[self.j] > self.nums[self.j + 1]:
+                    self.comparisions += 1
                     self.swap(self.j, self.j + 1)
                     self.return_idxs = [self.j, self.j+1]
                 self.j += 1
@@ -50,19 +54,21 @@ class sorter:
                 self.j = 0
                 self.i += 1
         self.return_idxs.append("B")
-        return self.nums, self.return_idxs
+        return self.nums, self.return_idxs, self.comparisions, self.swaps
 
     def fast_bubble_sort(self):
         swap_1 = -1
         self.i += 1
         for i in range(len(self.nums) - 1):
             if self.nums[i] > self.nums[i+1]:
+                self.comparisions += 1
                 if swap_1 == -1: swap_1 = i
                 temp = self.nums[i]
                 self.nums[i] = self.nums[i+1]
                 self.nums[i+1] = temp
+                self.swaps += 1
         self.return_idxs = [swap_1, len(self.nums) - self.i, 'B']
-        return self.nums, self.return_idxs
+        return self.nums, self.return_idxs, self.comparisions, self.swaps
 
     def insertion_sort(self):
         if self.j == self.i:
@@ -78,8 +84,9 @@ class sorter:
             self.return_idxs = [self.j + 1, self.j, "I"]
             self.i += 1
             self.j = self.i
+        self.comparisions += 1
 
-        return self.nums, self.return_idxs
+        return self.nums, self.return_idxs, self.comparisions, self.swaps
     
     def fast_insertion_sort(self):
         self.i += 1
@@ -90,9 +97,10 @@ class sorter:
             if start == -1: start = j
             self.nums[j+1] = self.nums[j]
             j-=1
+            self.comparisions += 1
         self.nums[j+1] = key
         self.return_idxs = [j + 1, start+1, "I"]
-        return self.nums, self.return_idxs
+        return self.nums, self.return_idxs, self.comparisions, self.swaps
 
     def m_insertion_sort(self, low):
         if self.j == self.i:
@@ -127,8 +135,9 @@ class sorter:
                 self.j = self.i
                 self.min_idx = self.i
                 self.return_idxs = [self.min_idx, self.i-1, "S"]
+            self.comparisions += 1
 
-        return self.nums, self.return_idxs
+        return self.nums, self.return_idxs, self.comparisions, self.swaps
 
     def fast_selection_sort(self):
         minn = 999999
@@ -137,10 +146,11 @@ class sorter:
             if minn != min(minn, self.nums[i]):
                 idx = i
                 minn = self.nums[i]
+                self.comparisions += 1
         self.swap(idx, self.i)
         self.i += 1
         self.return_idxs = [self.i-1, idx, "S"]
-        return self.nums, self.return_idxs
+        return self.nums, self.return_idxs, self.comparisions, self.swaps
 
     def quick_sort(self):
         if not self.partitioning and self.stack:
@@ -155,6 +165,7 @@ class sorter:
                 if self.nums[self.j] <= self.pivot:
                     self.i += 1
                     self.return_idxs = [i for i in range(low, high)]
+                    self.comparisions += 1
                     self.swap(self.i, self.j)
                 self.j += 1
 
@@ -184,7 +195,7 @@ class sorter:
         self.return_idxs.append(self.sorteds)
         self.return_idxs.append("Q")
 
-        return self.nums, self.return_idxs
+        return self.nums, self.return_idxs, self.comparisions, self.swaps
 
     def fast_merge_sort(self):
         length = len(self.nums)
@@ -205,6 +216,7 @@ class sorter:
                     else:
                         merged.append(self.right_part[ri])
                         ri += 1
+                    self.comparisions += 1
 
                 # Add remaining elements
                 merged.extend(self.left_part[li:])
@@ -221,7 +233,7 @@ class sorter:
                 self.i = 0  # Reset for next step
                 self.step *= 2  # Increase merge size
                 self.return_idxs = ["M"]
-        return self.nums, self.return_idxs
+        return self.nums, self.return_idxs, self.comparisions, self.swaps
 
     def merge_sort(self):
         if self.stack and not self.area:

@@ -170,7 +170,7 @@ class Sort_Visualizer:
 
 if __name__ == "__main__":
     x = Sort_Visualizer([1])
-    x.display_new()
+    x.dont()
 else:
     nums = [randint(5, 105) for _ in range(100)]
     x = Sort_Visualizer(nums)
