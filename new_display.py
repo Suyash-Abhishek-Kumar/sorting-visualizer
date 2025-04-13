@@ -19,19 +19,20 @@ class Sort_Visualizer:
         self.regular_font = pygame.font.Font(".\\basic_types\\Roboto-Medium.ttf", 24)
         self.head_font = pygame.font.Font(".\\basic_types\\Roboto-Medium.ttf", 30)
         self.img = pygame.image.load('.\\graphics\\button_2.png').convert_alpha()
-        self.buttons = [
-            Button(self.screen, (590, 35), 3, "Sort", self.start, colors.BLACK, fixed_size=(100, 20)),
-            Button(self.screen, (710, 35), 3, "Shuffle", self.reset, colors.BLACK, fixed_size=(100, 20)),
-            Button(self.screen, (590, 65), 3, "Big Array", self.reset_full_big, colors.BLACK, fixed_size=(100, 20)),
-            Button(self.screen, (710, 65), 3, "Small Array", self.reset_full_small, colors.BLACK, fixed_size=(100, 20)),
-            Button(self.screen, (480, 450), 3, "Bubble Sort", self.B, colors.BLACK, fixed_size=(100, 40)),
-            Button(self.screen, (515, 500), 3, "Insertion Sort", self.I, colors.BLACK, fixed_size=(140, 40)),
-            Button(self.screen, (675, 500), 3, "Selection Sort", self.S, colors.BLACK, fixed_size=(140, 40)),
-            Button(self.screen, (595, 450), 3, "Quick Sort", self.Q, colors.BLACK, fixed_size=(100, 40)),
-            Button(self.screen, (710, 450), 3, "Merge Sort", self.M, colors.BLACK, fixed_size=(100, 40))
-        ]
         self.ui_bg_color = colors.update_brightness(colors.DARK_NAVY_BLUE, 20)
         self.ui_bg_color_selected = colors.update_brightness(colors.ROYAL_BLUE, 30)
+        self.button_color = (130, 150, 255)
+        self.buttons = [
+            Button(self.screen, (590, 35), 3, "Sort", self.start, colors.WHITE, fixed_size=(100, 20), button_color=self.button_color, hover="darken"),
+            Button(self.screen, (710, 35), 3, "Shuffle", self.reset, colors.WHITE, fixed_size=(100, 20), button_color=self.button_color, hover="darken"),
+            Button(self.screen, (590, 65), 3, "Big Array", self.reset_full_big, colors.WHITE, fixed_size=(100, 20), button_color=self.button_color, hover="darken"),
+            Button(self.screen, (710, 65), 3, "Small Array", self.reset_full_small, colors.WHITE, fixed_size=(100, 20), button_color=self.button_color, hover="darken"),
+            Button(self.screen, (480, 440), 3, "Bubble Sort", self.B, colors.WHITE, fixed_size=(100, 40), button_color=self.button_color, hover="darken"),
+            Button(self.screen, (515, 490), 3, "Insertion Sort", self.I, colors.WHITE, fixed_size=(140, 40), button_color=self.button_color, hover="darken"),
+            Button(self.screen, (675, 490), 3, "Selection Sort", self.S, colors.WHITE, fixed_size=(140, 40), button_color=self.button_color, hover="darken"),
+            Button(self.screen, (595, 440), 3, "Quick Sort", self.Q, colors.WHITE, fixed_size=(100, 40), button_color=self.button_color, hover="darken"),
+            Button(self.screen, (710, 440), 3, "Merge Sort", self.M, colors.WHITE, fixed_size=(100, 40), button_color=self.button_color, hover="darken")
+        ]
         self.speed_slider = Slider(self.screen, (400, 50), 150, 10, 1, 60, 30, colors.GRAY, self.ui_bg_color_selected, "Speed")
         self.width = 0
         self.nums = self.scale_nums(nums)
@@ -167,8 +168,8 @@ class Sort_Visualizer:
         self.screen.blit(time, timebox)
 
         #draw lines
-        pygame.draw.line(self.screen, colors.WHITE, (420, 410), (770, 410), 3)
-        pygame.draw.line(self.screen, colors.WHITE, (30, 410), (380, 410), 3)
+        pygame.draw.line(self.screen, colors.WHITE, (420, 410), (770, 410), 1)
+        pygame.draw.line(self.screen, colors.WHITE, (30, 410), (380, 410), 1)
 
     def scale_nums(self, nums):
         max_num = max(nums)

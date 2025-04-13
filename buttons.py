@@ -2,7 +2,7 @@ import pygame # type: ignore
 import colors
 
 class Button:
-    def __init__(self, screen, loc, width, name, func, text_color, button_color = colors.WHITE, button_img = None, fixed_size = None, tiny = False):
+    def __init__(self, screen, loc, width, name, func, text_color, button_color = colors.WHITE, button_img = None, fixed_size = None, tiny = False, hover = "highlight"):
         self.regular_font = pygame.font.Font(".\\basic_types\\Roboto-Medium.ttf", 16)
         self.tiny_font = pygame.font.Font(".\\basic_types\\Roboto-Medium.ttf", 8)
         self.screen = screen
@@ -11,11 +11,15 @@ class Button:
         self.bold_width = self.width + 3
         self.width_copy = width
         self.button_color = button_color
+        self.hover = hover
+        self.neg = False
         self.back_color = colors.update_brightness(button_color, -min(50, min(button_color)))
         if not tiny:
             self.name = self.regular_font.render(name, False, text_color)
+            self.name_negative = self.regular_font.render(name, False, colors.negative(text_color))
         else:
             self.name = self.tiny_font.render(name, False, text_color)
+            self.name_negative = self.tiny_font.render(name, False, colors.negative(text_color))
         self.name_rect = self.name.get_rect()
 
         if fixed_size:
@@ -42,8 +46,14 @@ class Button:
             self.screen.blit(self.img, self.box_rect)
         else:
             pygame.draw.rect(self.screen, self.back_color, self.box_rect, border_radius=10)
-            pygame.draw.rect(self.screen, self.button_color, self.box_rect, self.width, border_radius=10)
-        self.screen.blit(self.name, self.name_rect)
+            if self.hover == "darken" and self.width == -1:
+                pygame.draw.rect(self.screen, self.button_color, self.box_rect, 0, border_radius=10)
+            if self.hover == "highlight":
+                pygame.draw.rect(self.screen, self.button_color, self.box_rect, self.width, border_radius=10)
+        if self.neg:
+            self.screen.blit(self.name_negative, self.name_rect)
+        else:
+            self.screen.blit(self.name, self.name_rect)
 
     def collision_check(self):
         mouse_pos = pygame.mouse.get_pos()
@@ -52,12 +62,15 @@ class Button:
             if self.img:
                 pygame.draw.rect(self.screen, pygame.Color(200, 200, 200, a = 255), self.box_rect, 0, 10)
             else:
-                self.width = self.bold_width
+                if self.hover == "highlight":
+                    self.width = self.bold_width
+                elif self.hover == "darken":
+                    self.width = -1
+                    self.neg = True
             return True
         else:
-            if self.img:
-                pass
-            else:
+            if not self.img:
                 self.width = self.width_copy
+                self.neg = False
             return False
         

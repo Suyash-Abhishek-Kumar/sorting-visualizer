@@ -13,6 +13,7 @@ GRAY = (127, 127, 127)
 ORANGE = (255, 155, 0)
 color = [0, 0, 255]
 cur = [0, 1]
+new_color = {}
     
 def scrolling(speed: int):
     for i in range(len(color)):
@@ -30,4 +31,10 @@ def update_brightness(color: list, value: int) -> list:
     new_color = [0, 0, 0]
     for i in range(3):
         new_color[i] = max(0, min(255, color[i] + value))
+    return tuple(new_color)
+
+def negative(color: list) -> list:
+    new_color = [0, 0, 0]
+    for i in range(3):
+        new_color[i] = 255 - color[i]
     return tuple(new_color)
