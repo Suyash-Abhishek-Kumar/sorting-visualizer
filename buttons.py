@@ -2,8 +2,9 @@ import pygame # type: ignore
 import colors
 
 class Button:
-    def __init__(self, screen, loc, width, name, func, text_color, button_color = colors.WHITE, button_img = None, fixed_size = None):
+    def __init__(self, screen, loc, width, name, func, text_color, button_color = colors.WHITE, button_img = None, fixed_size = None, tiny = False):
         self.regular_font = pygame.font.Font(".\\basic_types\\Roboto-Medium.ttf", 16)
+        self.tiny_font = pygame.font.Font(".\\basic_types\\Roboto-Medium.ttf", 8)
         self.screen = screen
         self.location = loc
         self.width = width
@@ -11,7 +12,10 @@ class Button:
         self.width_copy = width
         self.button_color = button_color
         self.back_color = colors.update_brightness(button_color, -min(50, min(button_color)))
-        self.name = self.regular_font.render(name, False, text_color)
+        if not tiny:
+            self.name = self.regular_font.render(name, False, text_color)
+        else:
+            self.name = self.tiny_font.render(name, False, text_color)
         self.name_rect = self.name.get_rect()
 
         if fixed_size:
