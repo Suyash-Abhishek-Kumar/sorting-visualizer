@@ -1,2 +1,2 @@
-import display
-display
+import new_display
+new_display
