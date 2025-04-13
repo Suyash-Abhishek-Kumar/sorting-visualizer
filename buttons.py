@@ -2,14 +2,17 @@ import pygame # type: ignore
 import colors
 
 class Button:
-    def __init__(self, screen, loc, width, name, color, func, button_img = None):
+    def __init__(self, screen, loc, width, name, func, text_color, button_color = colors.WHITE, button_img = None):
         self.regular_font = pygame.font.Font(".\\basic_types\\Roboto-Medium.ttf", 16)
         self.screen = screen
         self.location = loc
         self.width = width
         self.bold_width = self.width + 3
         self.width_copy = width
-        self.name = self.regular_font.render(name, False, color)
+        print("working")
+        self.button_color = button_color
+        self.back_color = colors.update_brightness(button_color, -min(50, min(button_color)))
+        self.name = self.regular_font.render(name, False, text_color)
         self.name_rect = self.name.get_rect()
         self.box_rect = self.name.get_rect()
         self.name_size = self.name_rect.size
@@ -29,7 +32,8 @@ class Button:
         if self.img:
             self.screen.blit(self.img, self.box_rect)
         else:
-            pygame.draw.rect(self.screen, self.color, self.box_rect, self.width)
+            pygame.draw.rect(self.screen, self.back_color, self.box_rect)
+            pygame.draw.rect(self.screen, self.button_color, self.box_rect, self.width)
         self.screen.blit(self.name, self.name_rect)
 
     def collision_check(self):

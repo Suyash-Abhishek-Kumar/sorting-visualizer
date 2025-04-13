@@ -17,16 +17,16 @@ class Sort_Visualizer:
         self.regular_font = pygame.font.Font(".\\basic_types\\Roboto-Medium.ttf", 24)
         self.img = pygame.image.load('.\\graphics\\button_2.png').convert_alpha()
         self.buttons = [
-            Button(self.screen, (550, 525), 3, "Sort", colors.BLACK, self.start, self.img),
-            Button(self.screen, (550, 575), 3, "Shuffle", colors.BLACK, self.reset, self.img),
+            Button(self.screen, (550, 525), 3, "Sort", self.start, colors.BLACK, button_img=self.img),
+            Button(self.screen, (550, 575), 3, "Shuffle", self.reset, colors.BLACK, button_img=self.img),
             # Button(self.screen, (550, 625), 3, "New Array", colors.BLACK, self.reset_full, self.img),
-            Button(self.screen, (550, 675), 3, "Big Array", colors.BLACK, self.reset_full_big, self.img),
-            Button(self.screen, (550, 725), 3, "Small Array", colors.BLACK, self.reset_full_small, self.img),
-            Button(self.screen, (250, 500), 3, "Bubble Sort", colors.BLACK, self.B, self.img),
-            Button(self.screen, (250, 550), 3, "Insertion Sort", colors.BLACK, self.I, self.img),
-            Button(self.screen, (250, 600), 3, "Selection Sort", colors.BLACK, self.S, self.img),
-            Button(self.screen, (250, 650), 3, "Quick Sort", colors.BLACK, self.Q, self.img),
-            Button(self.screen, (250, 700), 3, "Merge Sort", colors.BLACK, self.M, self.img)
+            Button(self.screen, (550, 675), 3, "Big Array", self.reset_full_big, colors.BLACK, button_img=self.img),
+            Button(self.screen, (550, 725), 3, "Small Array", self.reset_full_small, colors.BLACK, button_img=self.img),
+            Button(self.screen, (250, 500), 3, "Bubble Sort", self.B, colors.BLACK, button_img=self.img),
+            Button(self.screen, (250, 550), 3, "Insertion Sort", self.I, colors.BLACK, button_img=self.img),
+            Button(self.screen, (250, 600), 3, "Selection Sort", self.S, colors.BLACK, button_img=self.img),
+            Button(self.screen, (250, 650), 3, "Quick Sort", self.Q, colors.BLACK, button_img=self.img),
+            Button(self.screen, (250, 700), 3, "Merge Sort", self.M, colors.BLACK, button_img=self.img)
         ]
         self.speed_slider = Slider(self.screen, (550, 550), 200, 10, 1, 100, 50, colors.GRAY, colors.BLUE, "Speed")
         self.width = 0
@@ -62,6 +62,8 @@ class Sort_Visualizer:
                     running = False
             self.screen.fill(colors.DARK_NAVY_BLUE)
             self.graph()
+            for i in self.buttons:
+                i.run()
             pygame.display.update()
             self.clock.tick(60)
     
