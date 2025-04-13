@@ -15,11 +15,11 @@ class Sort_Visualizer:
         pygame.display.set_caption("Sort Visualizer")
         self.clock = pygame.time.Clock()
         self.regular_font = pygame.font.Font(".\\basic_types\\Roboto-Medium.ttf", 24)
+        self.head_font = pygame.font.Font(".\\basic_types\\Roboto-Medium.ttf", 30)
         self.img = pygame.image.load('.\\graphics\\button_2.png').convert_alpha()
         self.buttons = [
-            Button(self.screen, (550, 525), 3, "Sort", self.start, colors.BLACK, button_img=self.img),
+            Button(self.screen, (550, 500), 3, "Sort", self.start, colors.BLACK, fixed_size=(100, 50)),
             Button(self.screen, (550, 575), 3, "Shuffle", self.reset, colors.BLACK, button_img=self.img),
-            # Button(self.screen, (550, 625), 3, "New Array", colors.BLACK, self.reset_full, self.img),
             Button(self.screen, (550, 675), 3, "Big Array", self.reset_full_big, colors.BLACK, button_img=self.img),
             Button(self.screen, (550, 725), 3, "Small Array", self.reset_full_small, colors.BLACK, button_img=self.img),
             Button(self.screen, (250, 500), 3, "Bubble Sort", self.B, colors.BLACK, button_img=self.img),
@@ -28,7 +28,9 @@ class Sort_Visualizer:
             Button(self.screen, (250, 650), 3, "Quick Sort", self.Q, colors.BLACK, button_img=self.img),
             Button(self.screen, (250, 700), 3, "Merge Sort", self.M, colors.BLACK, button_img=self.img)
         ]
-        self.speed_slider = Slider(self.screen, (550, 550), 200, 10, 1, 100, 50, colors.GRAY, colors.BLUE, "Speed")
+        self.ui_bg_color = colors.update_brightness(colors.DARK_NAVY_BLUE, 20)
+        self.ui_bg_color_selected = colors.update_brightness(colors.ROYAL_BLUE, 30)
+        self.speed_slider = Slider(self.screen, (450, 50), 200, 10, 1, 100, 50, colors.GRAY, self.ui_bg_color_selected, "Speed")
         self.width = 0
         self.nums = self.scale_nums(nums)
         self.length = len(self.nums)
@@ -39,12 +41,12 @@ class Sort_Visualizer:
         self.sorteds = []
         self.graph_start = 30
         self.sorted = 0
+        self.current_speed = 60
         self.done = False
         self.algo_used = None
         self.begin = False
         self.go_fast = True
         self.selected_func = "B"
-        self.ui_bg_color = colors.update_brightness(colors.DARK_NAVY_BLUE, 20)
         self.final_green = self.final_green_speed()
     
     def start(self): self.begin = True
@@ -60,10 +62,41 @@ class Sort_Visualizer:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        for j in self.buttons:
+                            if j.collision_check():
+                                j.function()
+                                continue
+                self.speed_slider.handle_event(event)
             self.screen.fill(colors.DARK_NAVY_BLUE)
+            self.background_boxes()
             self.graph()
+            if self.begin:
+                if self.nums != sorted(self.nums):
+                    self.nums, self.idxs = self.algo.sort_type(self.selected_func, self.go_fast)
+                    if type(self.idxs[-1]) == str:
+                        self.algo_used = self.idxs.pop()
+                    if self.algo_used == "Q":
+                        self.sorteds = self.idxs.pop()
+                        pivot = self.idxs.pop()
+                        self.idxs = list(set(self.idxs))
+                        self.idxs.append(pivot)
+                elif self.algo_used == "M" and self.idxs[-1] == self.length - 1 and not reset_yet:
+                    self.done = True
+                    reset_yet = True
+                    self.idxs = [0]
+                elif not self.idxs or self.idxs[0]!=0:
+                    self.done = True
+                    self.idxs = [0]
+                else:
+                    if len(self.idxs) < len(self.nums):
+                        for i in range(self.final_green):
+                            self.idxs.append(self.idxs[-1] + 1)
+            self.speed_slider.run()
             for i in self.buttons:
                 i.run()
+            self.current_speed = self.speed_slider.get_value()
             pygame.display.update()
             self.clock.tick(60)
     
@@ -83,6 +116,18 @@ class Sort_Visualizer:
                 pygame.draw.rect(self.screen, colors.update_brightness(colors.GREEN, 100), [self.graph_start + self.width * i * 1.1, 345 - self.nums[i], self.width, self.nums[i]], 0)
             if not self.done and self.algo_used == "Q" and i in self.sorteds:
                 pygame.draw.rect(self.screen, colors.update_brightness(colors.ORANGE, -100), [self.graph_start + self.width * i * 1.1, 345 - self.nums[i], self.width, self.nums[i]], 0)
+    
+    def background_boxes(self):
+        #draw boxes
+        pygame.draw.rect(self.screen, self.ui_bg_color, [20, 20, 760, 60], 0, 6)
+        pygame.draw.rect(self.screen, self.ui_bg_color, [20, 100, 760, 250], 0, 6)
+        pygame.draw.rect(self.screen, self.ui_bg_color, [20, 370, 370, 160], 0, 6)
+        pygame.draw.rect(self.screen, self.ui_bg_color, [410, 370, 370, 160], 0, 6)
+        #draw text
+        heading = self.head_font.render("Sorting Visualizer", False, colors.WHITE)
+        headbox = heading.get_rect()
+        headbox.midleft = (30, 50)
+        self.screen.blit(heading, headbox)
 
     def scale_nums(self, nums):
         max_num = max(nums)
